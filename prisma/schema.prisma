@@ -1,0 +1,41 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js" //important!
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Student {
+  id      Int       @id @default(autoincrement())
+  name    String
+  role    Role      @default(BASIC)
+  modules Modules[]
+  book    Books[]
+}
+
+model Modules {
+  module_int Int      @id @default(autoincrement())
+  name       String
+  credit     Int
+  joined     DateTime @default(now())
+  student_id Int      
+  students   Student  @relation(fields: [student_id], references: [id])
+}
+
+model Books {
+  book_id Int       @id @default(autoincrement())
+  name    String
+  price   Decimal
+  students Student[]
+}
+
+enum Role {
+  BASIC
+  ADMIN
+  EDITOR
+}
